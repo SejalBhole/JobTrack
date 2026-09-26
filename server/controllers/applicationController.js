@@ -241,9 +241,43 @@ const updateApplication = async (req, res) => {
     }
 };
 
+
+const deleteApplication = async (req, res) => {
+    try {
+        const application = await Application.findOne({
+            _id: req.params.id,
+            userId: req.user
+        });
+
+        if (!application) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found"
+            });
+        }
+
+        await application.deleteOne();
+
+        return res.status(200).json({
+            success: true,
+            message: "Application deleted successfully"
+        });
+
+    } catch (error) {
+        console.error("Delete application error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        });
+    }
+};
+
 module.exports = {
     createApplication,
     getApplications,
     getApplicationById,
-    updateApplication
+    updateApplication,
+    deleteApplication
 };
+   
