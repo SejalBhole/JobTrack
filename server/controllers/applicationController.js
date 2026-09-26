@@ -92,7 +92,7 @@ const createApplication = async (req, res) => {
     }
 };
 
-
+//get all applications
 const getApplications = async (req, res) => {
     try {
         const applications = await Application.find({
@@ -117,7 +117,40 @@ const getApplications = async (req, res) => {
     }
 };
 
+
+
+//get specific application
+const getApplicationById = async (req, res) => {
+    try {
+        const application = await Application.findOne({
+            _id: req.params.id,
+            userId: req.user
+        });
+
+        if (!application) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            application
+        });
+
+    } catch (error) {
+        console.error("Get application error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        });
+    }
+};
+
 module.exports = {
     createApplication,
-    getApplications
+    getApplications,
+    getApplicationById
 };
